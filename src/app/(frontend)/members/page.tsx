@@ -1,9 +1,9 @@
 import { DynamicMainLayout } from "@/components/layout"
+import { MemberCard } from "@/components/members"
 import { Separator } from "@/components/ui/separator"
-import type { Member, Position, Media } from "../../../payload-types"
 import config from "@payload-config"
 import { getPayload } from "payload"
-import { MemberCard } from "@/components/members"
+import type { Media, Member, Position } from "../../../payload-types"
 
 // Extend Member to include populated relations
 interface MemberWithRelations extends Member {
@@ -132,7 +132,7 @@ export default async function Members() {
             <div key={positionGroup.position.id}>
               <section 
                 id={positionGroup.position.slug} 
-                className="scroll-mt-8 space-y-6"
+                className="scroll-mt-6 space-y-6"
               >
                 <div>
                   <h2 className="text-2xl font-bold mb-4">

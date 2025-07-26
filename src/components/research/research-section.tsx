@@ -19,7 +19,7 @@ export function ResearchSection({ researchArea }: ResearchSectionProps) {
   return (
     <section 
       id={researchArea.anchor} 
-      className="scroll-mt-8 space-y-6"
+      className="scroll-mt-6 space-y-6"
     >
       <div>
         <h2 className="text-2xl font-bold mb-4">
