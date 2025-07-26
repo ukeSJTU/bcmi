@@ -3,6 +3,7 @@ import { ResearchSection } from "@/components/research"
 import { Separator } from "@/components/ui/separator"
 import type { ResearchArea, ResearchDemo } from "@/payload-types"
 import config from "@payload-config"
+import { unstable_cache } from "next/cache"
 import { getPayload } from "payload"
 
 // Extend ResearchArea to include populated demos
@@ -10,14 +11,15 @@ interface ResearchAreaWithDemos extends ResearchArea {
   demos: ResearchDemo[]
 }
 
-async function getResearchData(): Promise<{
-  researchAreas: ResearchAreaWithDemos[]
-  sidebarItems: Array<{ title: string; anchor: string; active?: boolean }>
-}> {
-  try {
-    const payload = await getPayload({ config })
-    
-    // Fetch research areas with their demos
+const getResearchData = unstable_cache(
+  async (): Promise<{
+    researchAreas: ResearchAreaWithDemos[]
+    sidebarItems: Array<{ title: string; anchor: string; active?: boolean }>
+  }> => {
+    try {
+      const payload = await getPayload({ config })
+      
+      // Fetch research areas with their demos
     const researchAreasResult = await payload.find({
       collection: 'research-areas',
       where: {
@@ -78,7 +80,13 @@ async function getResearchData(): Promise<{
       ]
     }
   }
+},
+['research-data'], // cache key
+{
+  tags: ['research', 'research-areas', 'research-demos'], // cache tags for revalidation
+  revalidate: 3600 // cache for 1 hour by default
 }
+)
 
 export default async function Research() {
   const { researchAreas, sidebarItems } = await getResearchData()

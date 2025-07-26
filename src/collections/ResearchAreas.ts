@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload'
+import { createDeleteRevalidationHook, createRevalidationHook } from './hooks/revalidation'
 
 export const ResearchAreas: CollectionConfig = {
   slug: 'research-areas',
@@ -80,44 +81,18 @@ export const ResearchAreas: CollectionConfig = {
       },
     ],
     afterChange: [
-      async ({ operation }) => {
-        // Trigger revalidation when research area visibility or order changes
-        if (operation === 'update' || operation === 'create') {
-          try {
-            const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-            const revalidationSecret = process.env.REVALIDATION_SECRET
-            
-            if (!revalidationSecret) {
-              console.warn('[ResearchArea Hook] REVALIDATION_SECRET not configured, skipping revalidation')
-              return
-            }
-
-            // Revalidate research page when research areas change
-            const revalidateUrl = `${frontendUrl}/api/revalidate`
-            
-            console.log('[ResearchArea Hook] Triggering revalidation for research page')
-            
-            const response = await fetch(revalidateUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                tag: 'research-areas',
-                secret: revalidationSecret,
-              }),
-            })
-
-            if (!response.ok) {
-              console.error('[ResearchArea Hook] Failed to revalidate:', await response.text())
-            } else {
-              console.log('[ResearchArea Hook] Successfully revalidated research page')
-            }
-          } catch (error) {
-            console.error('[ResearchArea Hook] Revalidation error:', error)
-          }
-        }
-      },
+      createRevalidationHook({
+        collectionName: 'ResearchAreas',
+        tags: ['research-areas', 'research'],
+        paths: ['/research'],
+      })
+    ],
+    afterDelete: [
+      createDeleteRevalidationHook({
+        collectionName: 'ResearchAreas',
+        tags: ['research-areas', 'research'],
+        paths: ['/research'],
+      })
     ],
   },
 }

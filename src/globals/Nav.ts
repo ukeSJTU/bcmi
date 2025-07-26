@@ -1,4 +1,5 @@
 import { GlobalConfig } from 'payload'
+import { createGlobalRevalidationHook } from '../collections/hooks/revalidation'
 
 export const Nav: GlobalConfig = {
   slug: 'nav',
@@ -32,4 +33,13 @@ export const Nav: GlobalConfig = {
       ],
     },
   ],
+  hooks: {
+    afterChange: [
+      createGlobalRevalidationHook({
+        globalName: 'Nav',
+        tags: ['navigation', 'nav'],
+        paths: ['/', '/members', '/research', '/events', '/resources'], // Nav affects all pages
+      })
+    ],
+  },
 }

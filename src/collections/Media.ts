@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload'
+import { createDeleteRevalidationHook, createRevalidationHook } from './hooks/revalidation'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -47,4 +48,20 @@ export const Media: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    afterChange: [
+      createRevalidationHook({
+        collectionName: 'Media',
+        tags: ['media', 'members', 'research'], // Media can be used in members (photos) and research (demo images)
+        paths: ['/members', '/research'], // Both pages may display media
+      })
+    ],
+    afterDelete: [
+      createDeleteRevalidationHook({
+        collectionName: 'Media',
+        tags: ['media', 'members', 'research'],
+        paths: ['/members', '/research'],
+      })
+    ],
+  },
 }

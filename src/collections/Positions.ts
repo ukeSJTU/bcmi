@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload'
+import { createDeleteRevalidationHook, createRevalidationHook } from './hooks/revalidation'
 
 export const Positions: CollectionConfig = {
   slug: 'positions',
@@ -88,48 +89,18 @@ export const Positions: CollectionConfig = {
       },
     ],
     afterChange: [
-      async ({ operation }) => {
-        // Trigger revalidation when position visibility or order changes
-        if (operation === 'update' || operation === 'create') {
-          try {
-            const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-            const revalidationSecret = process.env.REVALIDATION_SECRET
-            
-            if (!revalidationSecret) {
-              console.warn('[Position Hook] REVALIDATION_SECRET not configured, skipping revalidation')
-              return
-            }
-
-            // Revalidate using cache tags for more granular control
-            const tagsToRevalidate = ['positions', 'members']
-            
-            for (const tag of tagsToRevalidate) {
-              const revalidateUrl = `${frontendUrl}/api/revalidate`
-              
-              console.log(`[Position Hook] Triggering revalidation for tag: ${tag}`)
-              
-              const response = await fetch(revalidateUrl, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  tag,
-                  secret: revalidationSecret,
-                }),
-              })
-
-              if (!response.ok) {
-                console.error(`[Position Hook] Failed to revalidate tag ${tag}:`, await response.text())
-              } else {
-                console.log(`[Position Hook] Successfully revalidated tag ${tag}`)
-              }
-            }
-          } catch (error) {
-            console.error('[Position Hook] Revalidation error:', error)
-          }
-        }
-      },
+      createRevalidationHook({
+        collectionName: 'Positions',
+        tags: ['positions', 'members'], // Positions affect both members page and nav
+        paths: ['/members'], // Members page uses position data for sidebar
+      })
+    ],
+    afterDelete: [
+      createDeleteRevalidationHook({
+        collectionName: 'Positions',
+        tags: ['positions', 'members'],
+        paths: ['/members'],
+      })
     ],
   },
 }

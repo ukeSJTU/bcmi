@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload'
+import { createDeleteRevalidationHook, createRevalidationHook } from './hooks/revalidation'
 
 export const ResearchDemos: CollectionConfig = {
   slug: 'research-demos',
@@ -78,4 +79,20 @@ export const ResearchDemos: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    afterChange: [
+      createRevalidationHook({
+        collectionName: 'ResearchDemos',
+        tags: ['research-demos', 'research'],
+        paths: ['/research'], // Research demos appear on research page
+      })
+    ],
+    afterDelete: [
+      createDeleteRevalidationHook({
+        collectionName: 'ResearchDemos',
+        tags: ['research-demos', 'research'],
+        paths: ['/research'],
+      })
+    ],
+  },
 }

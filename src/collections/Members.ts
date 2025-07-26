@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload'
+import { createDeleteRevalidationHook, createRevalidationHook } from './hooks/revalidation'
 
 export const Members: CollectionConfig = {
   slug: 'members',
@@ -158,4 +159,20 @@ export const Members: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    afterChange: [
+      createRevalidationHook({
+        collectionName: 'Members',
+        tags: ['members', 'positions'], // Members page depends on both members and positions data
+        paths: ['/members'], // Also revalidate the members page directly
+      })
+    ],
+    afterDelete: [
+      createDeleteRevalidationHook({
+        collectionName: 'Members',
+        tags: ['members'],
+        paths: ['/members'],
+      })
+    ],
+  },
 }
