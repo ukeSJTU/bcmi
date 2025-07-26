@@ -1,11 +1,16 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import path from 'path'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
+import { fileURLToPath } from 'url'
 import { Media } from './collections/Media'
 import { ResearchAreas } from './collections/ResearchAreas'
 import { ResearchDemos } from './collections/ResearchDemos'
 import { Nav } from './globals'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
 
 export default buildConfig({
   // If you'd like to use Rich Text, pass your editor here
@@ -17,6 +22,9 @@ export default buildConfig({
 
   // Your Payload secret - should be a complex and secure string, unguessable
   secret: process.env.PAYLOAD_SECRET || '',
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
   // Whichever Database Adapter you're using should go here
   // Mongoose is shown as an example, but you can also use Postgres
   db: postgresAdapter({

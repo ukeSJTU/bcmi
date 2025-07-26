@@ -2,11 +2,14 @@
   "name": "bcmi",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "payload": "payload",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.0",
@@ -42,6 +45,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "cross-env": "^10.0.0",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "graphql": "^16.11.0",
