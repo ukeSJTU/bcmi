@@ -67,9 +67,11 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    media: Media;
+    members: Member;
+    positions: Position;
     'research-areas': ResearchArea;
     'research-demos': ResearchDemo;
-    media: Media;
     users: User;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -77,9 +79,11 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    media: MediaSelect<false> | MediaSelect<true>;
+    members: MembersSelect<false> | MembersSelect<true>;
+    positions: PositionsSelect<false> | PositionsSelect<true>;
     'research-areas': ResearchAreasSelect<false> | ResearchAreasSelect<true>;
     'research-demos': ResearchDemosSelect<false> | ResearchDemosSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -120,6 +124,176 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  /**
+   * Alternative text for screen readers and SEO
+   */
+  alt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    demo?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members".
+ */
+export interface Member {
+  id: number;
+  name: string;
+  /**
+   * Professional headshot or profile photo
+   */
+  photo?: (number | null) | Media;
+  email?: string | null;
+  /**
+   * Which position category this member belongs to
+   */
+  position: number | Position;
+  /**
+   * Faculty member who mentors this person (leave empty for faculty)
+   */
+  mentor?: (number | null) | Member;
+  /**
+   * Order within position/mentor group (lower numbers first)
+   */
+  displayOrder?: number | null;
+  /**
+   * e.g., "Professor", "Associate Professor", "Lecturer"
+   */
+  title?: string | null;
+  /**
+   * Department or affiliation
+   */
+  department?: string | null;
+  /**
+   * Brief description of research areas and interests
+   */
+  researchInterests?: string | null;
+  /**
+   * Detailed biographical information
+   */
+  bio?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  officeLocation?: string | null;
+  phone?: string | null;
+  /**
+   * URL to personal or academic homepage
+   */
+  personalWebsite?: string | null;
+  /**
+   * Educational background and degrees
+   */
+  education?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Whether this member is currently with the lab (uncheck for alumni)
+   */
+  isActive?: boolean | null;
+  /**
+   * When this member joined the lab
+   */
+  joinDate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "positions".
+ */
+export interface Position {
+  id: number;
+  /**
+   * Display name for this position (e.g., "Faculty Members", "PhD Students")
+   */
+  title: string;
+  /**
+   * URL-friendly identifier (auto-generated from title)
+   */
+  slug: string;
+  /**
+   * Optional description for this position category
+   */
+  description?: string | null;
+  /**
+   * Order in which this position appears in the sidebar (lower numbers first)
+   */
+  displayOrder: number;
+  /**
+   * Whether this position should be shown in the members sidebar
+   */
+  isVisible?: boolean | null;
+  /**
+   * Whether members in this position should be grouped by their mentor
+   */
+  showMentorGrouping?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -200,54 +374,6 @@ export interface ResearchDemo {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  /**
-   * Alternative text for screen readers and SEO
-   */
-  alt?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    demo?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -278,16 +404,24 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'members';
+        value: number | Member;
+      } | null)
+    | ({
+        relationTo: 'positions';
+        value: number | Position;
+      } | null)
+    | ({
         relationTo: 'research-areas';
         value: number | ResearchArea;
       } | null)
     | ({
         relationTo: 'research-demos';
         value: number | ResearchDemo;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
       } | null)
     | ({
         relationTo: 'users';
@@ -334,40 +468,6 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "research-areas_select".
- */
-export interface ResearchAreasSelect<T extends boolean = true> {
-  title?: T;
-  anchor?: T;
-  description?: T;
-  bulletPoints?:
-    | T
-    | {
-        point?: T;
-        id?: T;
-      };
-  order?: T;
-  isVisible?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "research-demos_select".
- */
-export interface ResearchDemosSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  image?: T;
-  demoUrl?: T;
-  isExternal?: T;
-  researchArea?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -420,6 +520,78 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members_select".
+ */
+export interface MembersSelect<T extends boolean = true> {
+  name?: T;
+  photo?: T;
+  email?: T;
+  position?: T;
+  mentor?: T;
+  displayOrder?: T;
+  title?: T;
+  department?: T;
+  researchInterests?: T;
+  bio?: T;
+  officeLocation?: T;
+  phone?: T;
+  personalWebsite?: T;
+  education?: T;
+  isActive?: T;
+  joinDate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "positions_select".
+ */
+export interface PositionsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  displayOrder?: T;
+  isVisible?: T;
+  showMentorGrouping?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "research-areas_select".
+ */
+export interface ResearchAreasSelect<T extends boolean = true> {
+  title?: T;
+  anchor?: T;
+  description?: T;
+  bulletPoints?:
+    | T
+    | {
+        point?: T;
+        id?: T;
+      };
+  order?: T;
+  isVisible?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "research-demos_select".
+ */
+export interface ResearchDemosSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  image?: T;
+  demoUrl?: T;
+  isExternal?: T;
+  researchArea?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
