@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "payload": "payload",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "seed": "tsx scripts/seed/index.ts",
     "seed:dev": "tsx scripts/seed/development.ts",
