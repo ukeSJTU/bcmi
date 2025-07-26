@@ -59,13 +59,10 @@ export const Members: CollectionConfig = {
       admin: {
         description: 'Faculty member who mentors this person (leave empty for faculty)',
       },
-      filterOptions: () => {
-        // Only show faculty members as potential mentors
-        return {
-          position: {
-            in: ['faculty-members'], // Will need to use actual position ID
-          },
-        }
+      filterOptions: {
+        'position.slug': {
+          equals: 'faculty-members',
+        },
       },
     },
     {
