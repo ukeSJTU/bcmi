@@ -1,13 +1,14 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 
 interface SidebarItem {
   title: string
   href?: string
+  anchor?: string
   active?: boolean
 }
 
@@ -30,8 +31,8 @@ export function SidebarNavigation({ title, items, className }: SidebarNavigation
           <div className="space-y-1">
             {items.map((item, index) => (
               <div key={index}>
-                {item.href ? (
-                  <Link href={item.href}>
+                {item.href || item.anchor ? (
+                  <Link href={item.href || `#${item.anchor}`}>
                     <Button
                       variant={item.active || pathname === item.href ? "secondary" : "ghost"}
                       className="w-full justify-start"
@@ -43,7 +44,7 @@ export function SidebarNavigation({ title, items, className }: SidebarNavigation
                   <Button
                     variant={item.active ? "secondary" : "ghost"}
                     className="w-full justify-start cursor-default"
-                    disabled={!item.href}
+                    disabled={!item.href && !item.anchor}
                   >
                     {item.title}
                   </Button>

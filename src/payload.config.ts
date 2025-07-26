@@ -2,6 +2,9 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
+import { Media } from './collections/Media'
+import { ResearchAreas } from './collections/ResearchAreas'
+import { ResearchDemos } from './collections/ResearchDemos'
 import { Nav } from './globals'
 
 export default buildConfig({
@@ -9,7 +12,7 @@ export default buildConfig({
   editor: lexicalEditor(),
 
   // Define and configure your collections in this array
-  collections: [],
+  collections: [ResearchAreas, ResearchDemos, Media],
   globals: [Nav],
 
   // Your Payload secret - should be a complex and secure string, unguessable

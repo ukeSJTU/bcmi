@@ -1,44 +1,128 @@
-import { MainLayout } from "@/components/layout";
+import { DynamicMainLayout } from "@/components/layout"
+import { ResearchSection } from "@/components/research"
+import { Separator } from "@/components/ui/separator"
+import type { Demo, ResearchArea } from "@/types/research"
+import config from "@payload-config"
+import { getPayload } from "payload"
 
-export default function Research() {
+async function getResearchData(): Promise<{
+  researchAreas: ResearchArea[]
+  sidebarItems: Array<{ title: string; anchor: string; active?: boolean }>
+}> {
+  try {
+    const payload = await getPayload({ config })
+    
+    // Fetch research areas with their demos
+    const researchAreasResult = await payload.find({
+      collection: 'research-areas',
+      where: {
+        isVisible: {
+          equals: true,
+        },
+      },
+      sort: 'order',
+      limit: 100,
+    })
+
+    // Fetch all demos and group by research area
+    const demosResult = await payload.find({
+      collection: 'research-demos',
+      sort: 'order',
+      limit: 1000,
+      depth: 2, // Include media relations
+    })
+
+    // Group demos by research area
+    const demosByArea = demosResult.docs.reduce((acc, demo) => {
+      const areaId = typeof demo.researchArea === 'object' 
+        ? String(demo.researchArea.id)
+        : String(demo.researchArea)
+      
+      if (!acc[areaId]) {
+        acc[areaId] = []
+      }
+      
+      acc[areaId].push({
+        id: String(demo.id),
+        title: demo.title,
+        description: demo.description,
+        image: demo.image ? {
+          url: typeof demo.image === 'object' ? demo.image.url : '',
+          alt: typeof demo.image === 'object' ? demo.image.alt : '',
+        } : undefined,
+        demoUrl: demo.demoUrl,
+        isExternal: demo.isExternal,
+        order: demo.order,
+      } as Demo)
+      
+      return acc
+    }, {} as Record<string, Demo[]>)
+
+    // Transform research areas data
+    const researchAreas: ResearchArea[] = researchAreasResult.docs.map(area => ({
+      id: String(area.id),
+      title: area.title,
+      anchor: area.anchor,
+      description: area.description,
+      bulletPoints: area.bulletPoints,
+      order: area.order,
+      isVisible: area.isVisible,
+      demos: demosByArea[String(area.id)] || [],
+    }))
+
+    // Generate sidebar items
+    const sidebarItems = researchAreas.map((area, index) => ({
+      title: area.title,
+      anchor: area.anchor,
+      active: index === 0, // First item active by default
+    }))
+
+    return { researchAreas, sidebarItems }
+  } catch (error) {
+    console.error('Error fetching research data:', error)
+    return { 
+      researchAreas: [], 
+      sidebarItems: [
+        { title: "Brain Computer Interface and EEG Data Processing", anchor: "bci", active: true },
+        { title: "Computer Vision", anchor: "cv" },
+        { title: "Speech Recognition", anchor: "speech" },
+        { title: "Natural Language Processing", anchor: "nlp" },
+      ]
+    }
+  }
+}
+
+export default async function Research() {
+  const { researchAreas, sidebarItems } = await getResearchData()
+
+  const dynamicSidebarConfig = {
+    title: "RESEARCH TOPICS",
+    items: sidebarItems,
+  }
+
   return (
-    <MainLayout sidebar="research">
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-4">Brain Computer Interface and EEG Data Processing</h1>
-          <p className="text-muted-foreground mb-6">
-            By using theory and methods of statistical learning and information geometry, such as PCA/ICA, 
-            NMF, NTF (Nonnegative Tensor Factorization), we are
-          </p>
-        </div>
-        
-        <div className="space-y-4">
-          <ul className="list-disc list-inside space-y-2">
-            <li>To investigate EEG noise reduction, event-related potentials, pattern analysis for imaginary motion evoked potentials and vigilance pattern analysis.</li>
-            <li>To study the spatial-temporal characteristics of evoked potentials and their dynamics.</li>
-            <li>To develop pattern classification methods for evoked potentials, imaginary motion potentials and vigilance</li>
-            <li>To design EEG based vigilance analysis system and brain-computer interaction systems</li>
-          </ul>
-        </div>
-        
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Demos:</h3>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="border rounded-lg p-4">
-              <h4 className="font-medium mb-2">EEG-based Wheelchair</h4>
-              <p className="text-sm text-muted-foreground">
-                Demonstration of brain-computer interface technology for wheelchair control
-              </p>
+    <DynamicMainLayout dynamicSidebar={dynamicSidebarConfig}>
+      <div className="space-y-12">
+        {researchAreas.length > 0 ? (
+          researchAreas.map((area, index) => (
+            <div key={area.id}>
+              <ResearchSection researchArea={area} />
+              {index < researchAreas.length - 1 && (
+                <div className="pt-8">
+                  <Separator />
+                </div>
+              )}
             </div>
-            <div className="border rounded-lg p-4">
-              <h4 className="font-medium mb-2">Multi-person Car Racing System</h4>
-              <p className="text-sm text-muted-foreground">
-                Interactive brain-controlled racing system for multiple participants
-              </p>
-            </div>
+          ))
+        ) : (
+          <div className="text-center py-12">
+            <h2 className="text-xl font-semibold mb-4">No Research Areas Found</h2>
+            <p className="text-muted-foreground">
+              Research areas will appear here once they are added through the admin panel.
+            </p>
           </div>
-        </div>
+        )}
       </div>
-    </MainLayout>
-  );
+    </DynamicMainLayout>
+  )
 }

@@ -1,4 +1,5 @@
-export { SiteHeader } from "./site-header"
-export { SiteFooter } from "./site-footer"
+export { DynamicMainLayout } from "./dynamic-main-layout"
 export { MainLayout } from "./main-layout"
-export { SidebarNavigation, sidebarConfigs } from "./sidebar-navigation"
+export { sidebarConfigs, SidebarNavigation } from "./sidebar-navigation"
+export { SiteFooter } from "./site-footer"
+export { SiteHeader } from "./site-header"
