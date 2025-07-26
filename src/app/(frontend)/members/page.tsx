@@ -2,6 +2,7 @@ import { DynamicMainLayout } from "@/components/layout"
 import { MemberCard } from "@/components/members"
 import { Separator } from "@/components/ui/separator"
 import config from "@payload-config"
+import { unstable_cache } from "next/cache"
 import { getPayload } from "payload"
 import type { Media, Member, Position } from "../../../payload-types"
 
@@ -22,24 +23,25 @@ interface PositionWithMembers {
   memberGroups: MentorGroup[]
 }
 
-async function getMembersData(): Promise<{
-  positionGroups: PositionWithMembers[]
-  sidebarItems: Array<{ title: string; anchor: string; active?: boolean }>
-}> {
-  try {
-    const payload = await getPayload({ config })
-    
-    // Fetch all visible positions
-    const positionsResult = await payload.find({
-      collection: 'positions',
-      where: {
-        isVisible: {
-          equals: true,
+const getMembersData = unstable_cache(
+  async (): Promise<{
+    positionGroups: PositionWithMembers[]
+    sidebarItems: Array<{ title: string; anchor: string; active?: boolean }>
+  }> => {
+    try {
+      const payload = await getPayload({ config })
+      
+      // Fetch all visible positions
+      const positionsResult = await payload.find({
+        collection: 'positions',
+        where: {
+          isVisible: {
+            equals: true,
+          },
         },
-      },
-      sort: 'displayOrder',
-      limit: 100,
-    })
+        sort: 'displayOrder',
+        limit: 100,
+      })
 
     // Fetch all active members with populated relations
     const membersResult = await payload.find({
@@ -114,7 +116,13 @@ async function getMembersData(): Promise<{
       ]
     }
   }
+},
+['members-data'], // cache key
+{
+  tags: ['members', 'positions'], // cache tags for revalidation
+  revalidate: 3600 // cache for 1 hour by default
 }
+)
 
 export default async function Members() {
   const { positionGroups, sidebarItems } = await getMembersData()
