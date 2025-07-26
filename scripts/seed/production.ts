@@ -55,8 +55,6 @@ async function seedPositions(payload: Payload): Promise<SeedResult> {
       displayOrder: displayOrder++,
       isVisible: category.active !== false,
       showMentorGrouping: category.name !== 'Faculty Members',
-      showInNavigation: category.active !== false,
-      requiresMentor: category.name !== 'Faculty Members',
     })
   }
 
@@ -69,7 +67,6 @@ async function seedPositions(payload: Payload): Promise<SeedResult> {
       displayOrder: displayOrder,
       isVisible: false,
       showMentorGrouping: false,
-      showInNavigation: false,
     })
   }
 
