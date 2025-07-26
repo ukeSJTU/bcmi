@@ -1,33 +1,18 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import type { Media, ResearchArea, ResearchDemo } from "@/payload-types"
 import { ExternalLink } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
-interface Demo {
-  id: string
-  title: string
-  description?: string
-  image?: {
-    url: string
-    alt?: string
-  }
-  demoUrl: string
-  isExternal: boolean
-}
-
-interface ResearchArea {
-  id: string
-  title: string
-  anchor: string
-  description?: string
-  bulletPoints?: Array<{ point: string }>
-  demos?: Demo[]
+// Extend ResearchArea to include populated demos
+interface ResearchAreaWithDemos extends ResearchArea {
+  demos: ResearchDemo[]
 }
 
 interface ResearchSectionProps {
-  researchArea: ResearchArea
+  researchArea: ResearchAreaWithDemos
 }
 
 export function ResearchSection({ researchArea }: ResearchSectionProps) {
@@ -77,7 +62,7 @@ export function ResearchSection({ researchArea }: ResearchSectionProps) {
 }
 
 interface DemoCardProps {
-  demo: Demo
+  demo: ResearchDemo
 }
 
 function DemoCard({ demo }: DemoCardProps) {
@@ -86,14 +71,17 @@ function DemoCard({ demo }: DemoCardProps) {
     ? { href: demo.demoUrl, target: "_blank", rel: "noopener noreferrer" }
     : { href: demo.demoUrl }
 
+  // Handle image type (could be number ID or populated Media object)
+  const imageData = typeof demo.image === 'object' && demo.image ? demo.image as Media : null
+
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
-      {demo.image && (
+      {imageData && imageData.url && (
         <div className="relative">
           <AspectRatio ratio={16 / 9}>
             <Image
-              src={demo.image.url}
-              alt={demo.image.alt || demo.title}
+              src={imageData.url}
+              alt={imageData.alt || demo.title}
               fill
               className="object-cover"
             />

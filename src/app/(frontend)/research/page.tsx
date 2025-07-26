@@ -1,12 +1,17 @@
 import { DynamicMainLayout } from "@/components/layout"
 import { ResearchSection } from "@/components/research"
 import { Separator } from "@/components/ui/separator"
-import type { Demo, ResearchArea } from "@/types/research"
+import type { ResearchArea, ResearchDemo } from "@/payload-types"
 import config from "@payload-config"
 import { getPayload } from "payload"
 
+// Extend ResearchArea to include populated demos
+interface ResearchAreaWithDemos extends ResearchArea {
+  demos: ResearchDemo[]
+}
+
 async function getResearchData(): Promise<{
-  researchAreas: ResearchArea[]
+  researchAreas: ResearchAreaWithDemos[]
   sidebarItems: Array<{ title: string; anchor: string; active?: boolean }>
 }> {
   try {
@@ -33,7 +38,7 @@ async function getResearchData(): Promise<{
     })
 
     // Group demos by research area
-    const demosByArea = demosResult.docs.reduce((acc, demo) => {
+    const demosByArea = demosResult.docs.reduce((acc, demo: ResearchDemo) => {
       const areaId = typeof demo.researchArea === 'object' 
         ? String(demo.researchArea.id)
         : String(demo.researchArea)
@@ -42,31 +47,14 @@ async function getResearchData(): Promise<{
         acc[areaId] = []
       }
       
-      acc[areaId].push({
-        id: String(demo.id),
-        title: demo.title,
-        description: demo.description,
-        image: demo.image ? {
-          url: typeof demo.image === 'object' ? demo.image.url : '',
-          alt: typeof demo.image === 'object' ? demo.image.alt : '',
-        } : undefined,
-        demoUrl: demo.demoUrl,
-        isExternal: demo.isExternal,
-        order: demo.order,
-      } as Demo)
+      acc[areaId].push(demo)
       
       return acc
-    }, {} as Record<string, Demo[]>)
+    }, {} as Record<string, ResearchDemo[]>)
 
     // Transform research areas data
-    const researchAreas: ResearchArea[] = researchAreasResult.docs.map(area => ({
-      id: String(area.id),
-      title: area.title,
-      anchor: area.anchor,
-      description: area.description,
-      bulletPoints: area.bulletPoints,
-      order: area.order,
-      isVisible: area.isVisible,
+    const researchAreas: ResearchAreaWithDemos[] = researchAreasResult.docs.map((area: ResearchArea) => ({
+      ...area,
       demos: demosByArea[String(area.id)] || [],
     }))
 

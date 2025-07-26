@@ -1,3 +1,4 @@
+import type { Nav } from "@/payload-types"
 import config from "@payload-config"
 import Image from "next/image"
 import Link from "next/link"
@@ -7,6 +8,7 @@ import { SiteHeaderClient } from "./site-header-client"
 interface NavigationItem {
   label: string
   href: string
+  openInNewTab?: boolean
 }
 
 // TODO: use seed data to populate initial data on deployment
@@ -21,16 +23,14 @@ const defaultNavigationItems: NavigationItem[] = [
 async function getNavigationItems(): Promise<NavigationItem[]> {
   try {
     const payload = await getPayload({ config })
-    const nav = await payload.findGlobal({
+    const nav: Nav = await payload.findGlobal({
       slug: 'nav',
     })
     if (nav.items && Array.isArray(nav.items) && nav.items.length > 0) {
-      return nav.items.map(item => ({
+      return nav.items.map((item: Nav['items'][0]) => ({
         label: item.label,
-        href: item.type === 'internal' 
-          ? `/${item.page?.slug || ''}` 
-          : item.url || '#',
-        openInNewTab: item.openInNewTab || false
+        href: item.href,
+        openInNewTab: item.newTab || false
       }))
     } else {
       return defaultNavigationItems
