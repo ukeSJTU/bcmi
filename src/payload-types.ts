@@ -67,6 +67,7 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    events: Event;
     media: Media;
     members: Member;
     positions: Position;
@@ -79,6 +80,7 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    events: EventsSelect<false> | EventsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     members: MembersSelect<false> | MembersSelect<true>;
     positions: PositionsSelect<false> | PositionsSelect<true>;
@@ -124,6 +126,143 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  /**
+   * URL-friendly identifier for this event (auto-generated from title if not provided)
+   */
+  slug: string;
+  /**
+   * Detailed description of the event
+   */
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Brief summary for event listing cards (optional, will use truncated description if not provided)
+   */
+  summary?: string | null;
+  eventType: 'conference' | 'workshop' | 'seminar' | 'symposium' | 'lecture' | 'competition' | 'meeting' | 'other';
+  status: 'upcoming' | 'ongoing' | 'completed' | 'cancelled';
+  startDate: string;
+  /**
+   * Leave empty for single-day events
+   */
+  endDate?: string | null;
+  /**
+   * Timezone for the event (e.g., "Asia/Shanghai", "UTC")
+   */
+  timezone?: string | null;
+  location?: {
+    /**
+     * Name of the venue, building, or platform
+     */
+    venue?: string | null;
+    /**
+     * Physical address or online meeting details
+     */
+    address?: string | null;
+    /**
+     * Specific room, hall, or meeting ID
+     */
+    room?: string | null;
+    isOnline?: boolean | null;
+  };
+  /**
+   * Organization or person organizing the event
+   */
+  organizer?: string | null;
+  speakers?:
+    | {
+        name: string;
+        affiliation?: string | null;
+        bio?: string | null;
+        photo?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Tags for categorizing and filtering events
+   */
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Main image for the event (used in listings and detail page)
+   */
+  featuredImage?: (number | null) | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  externalLinks?:
+    | {
+        title: string;
+        url: string;
+        type?: ('registration' | 'website' | 'program' | 'materials' | 'recording' | 'other') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Order for sorting events (lower numbers first)
+   */
+  displayOrder?: number | null;
+  /**
+   * Whether this event is visible on the website
+   */
+  isPublished?: boolean | null;
+  /**
+   * Featured events are highlighted on the homepage and events page
+   */
+  isFeatured?: boolean | null;
+  /**
+   * For completed events - how many people attended
+   */
+  attendeeCount?: number | null;
+  /**
+   * For completed events - summary of outcomes, achievements, or key takeaways
+   */
+  outcomes?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -404,6 +543,10 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -468,6 +611,68 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  summary?: T;
+  eventType?: T;
+  status?: T;
+  startDate?: T;
+  endDate?: T;
+  timezone?: T;
+  location?:
+    | T
+    | {
+        venue?: T;
+        address?: T;
+        room?: T;
+        isOnline?: T;
+      };
+  organizer?: T;
+  speakers?:
+    | T
+    | {
+        name?: T;
+        affiliation?: T;
+        bio?: T;
+        photo?: T;
+        id?: T;
+      };
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  externalLinks?:
+    | T
+    | {
+        title?: T;
+        url?: T;
+        type?: T;
+        id?: T;
+      };
+  displayOrder?: T;
+  isPublished?: T;
+  isFeatured?: T;
+  attendeeCount?: T;
+  outcomes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -4,7 +4,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
-import { Media, Members, Positions, ResearchAreas, ResearchDemos } from './collections'
+import { Events, Media, Members, Positions, ResearchAreas, ResearchDemos } from './collections'
 import { Nav } from './globals'
 
 const filename = fileURLToPath(import.meta.url)
@@ -15,7 +15,7 @@ export default buildConfig({
   editor: lexicalEditor(),
 
   // Define and configure your collections in this array
-  collections: [Media, Members, Positions, ResearchAreas, ResearchDemos],
+  collections: [Events, Media, Members, Positions, ResearchAreas, ResearchDemos],
   globals: [Nav],
 
   // Your Payload secret - should be a complex and secure string, unguessable

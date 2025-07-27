@@ -4,6 +4,7 @@
  */
 
 import type {
+    Event,
     Member,
     Nav,
     Position,
@@ -27,6 +28,17 @@ export interface MemberSeedData extends Omit<Member, 'id' | 'updatedAt' | 'creat
   position: number // Numeric ID for seeding
   mentor?: number // Numeric ID for seeding  
   photo?: string // file path for seeding, will become media relationship
+}
+
+export interface EventSeedData extends Omit<Event, 'id' | 'updatedAt' | 'createdAt' | 'featuredImage' | 'gallery' | 'speakers'> {
+  featuredImage?: string // file path for seeding, will become media relationship
+  gallery?: Array<{ image: string; caption?: string }> // file paths for seeding
+  speakers?: Array<{
+    name: string
+    affiliation?: string
+    bio?: string
+    photo?: string // file path for seeding
+  }>
 }
 
 export interface ResearchAreaSeedData extends Omit<ResearchArea, 'id' | 'updatedAt' | 'createdAt'> {
