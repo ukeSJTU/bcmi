@@ -8,6 +8,7 @@ import type {
     Member,
     Nav,
     Position,
+    Resource,
     ResearchArea,
     ResearchDemo
 } from '@/payload-types'
@@ -39,6 +40,35 @@ export interface EventSeedData extends Omit<Event, 'id' | 'updatedAt' | 'created
     bio?: string
     photo?: string // file path for seeding
   }>
+}
+
+export interface ResourceSeedData extends Omit<Resource, 'id' | 'updatedAt' | 'createdAt' | 'featuredImage' | 'gallery' | 'downloadInfo' | 'courseInfo' | 'publicationInfo'> {
+  featuredImage?: string // file path for seeding, will become media relationship
+  gallery?: Array<{ image: string; caption?: string }> // file paths for seeding
+  downloadInfo?: {
+    hasDownload?: boolean
+    file?: string // file path for seeding
+    downloadUrl?: string
+    fileSize?: string
+    format?: string
+    requirements?: string
+  }
+  courseInfo?: {
+    isCourse?: boolean
+    instructor?: string
+    duration?: string
+    difficulty?: 'beginner' | 'intermediate' | 'advanced'
+    prerequisites?: string
+    syllabus?: any
+  }
+  publicationInfo?: {
+    isPublication?: boolean
+    authors?: string
+    journal?: string
+    year?: number
+    doi?: string
+    abstract?: any
+  }
 }
 
 export interface ResearchAreaSeedData extends Omit<ResearchArea, 'id' | 'updatedAt' | 'createdAt'> {

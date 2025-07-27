@@ -73,6 +73,7 @@ export interface Config {
     positions: Position;
     'research-areas': ResearchArea;
     'research-demos': ResearchDemo;
+    resources: Resource;
     users: User;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     positions: PositionsSelect<false> | PositionsSelect<true>;
     'research-areas': ResearchAreasSelect<false> | ResearchAreasSelect<true>;
     'research-demos': ResearchDemosSelect<false> | ResearchDemosSelect<true>;
+    resources: ResourcesSelect<false> | ResourcesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -513,6 +515,187 @@ export interface ResearchDemo {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resources".
+ */
+export interface Resource {
+  id: number;
+  title: string;
+  /**
+   * URL-friendly identifier for this resource (auto-generated from title if not provided)
+   */
+  slug: string;
+  /**
+   * Full description of the resource
+   */
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Brief summary for resource cards (optional, will use truncated description if not provided)
+   */
+  summary?: string | null;
+  resourceType: 'dataset' | 'software' | 'course' | 'tutorial' | 'documentation' | 'publication' | 'code' | 'other';
+  /**
+   * Category for organizing resources (e.g., "Machine Learning", "EEG Data", "Computer Vision")
+   */
+  category?: string | null;
+  /**
+   * Tags for search and filtering
+   */
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Information for downloadable resources
+   */
+  downloadInfo?: {
+    hasDownload?: boolean | null;
+    /**
+     * Upload the actual file for download
+     */
+    file?: (number | null) | Media;
+    /**
+     * URL to external download (use this if file is hosted elsewhere)
+     */
+    downloadUrl?: string | null;
+    /**
+     * Human-readable file size (e.g., "1.2MB", "10.8GB")
+     */
+    fileSize?: string | null;
+    /**
+     * File format/extension (e.g., "ZIP", "RAR", "CSV", "JSON")
+     */
+    format?: string | null;
+    /**
+     * Any system requirements or dependencies
+     */
+    requirements?: string | null;
+  };
+  /**
+   * Information for courses and tutorials
+   */
+  courseInfo?: {
+    isCourse?: boolean | null;
+    instructor?: string | null;
+    /**
+     * Course duration (e.g., "8 weeks", "20 hours")
+     */
+    duration?: string | null;
+    difficulty?: ('beginner' | 'intermediate' | 'advanced') | null;
+    /**
+     * Required knowledge or skills
+     */
+    prerequisites?: string | null;
+    /**
+     * Detailed course content or syllabus
+     */
+    syllabus?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  /**
+   * Information for research publications and papers
+   */
+  publicationInfo?: {
+    isPublication?: boolean | null;
+    authors?: string | null;
+    journal?: string | null;
+    year?: number | null;
+    /**
+     * Digital Object Identifier
+     */
+    doi?: string | null;
+    abstract?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  links?:
+    | {
+        title: string;
+        url: string;
+        type?: ('website' | 'github' | 'docs' | 'demo' | 'download' | 'publication' | 'video' | 'other') | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Main image for the resource (used in listings and detail view)
+   */
+  featuredImage?: (number | null) | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        caption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Order for sorting resources (lower numbers first)
+   */
+  displayOrder?: number | null;
+  /**
+   * Whether this resource is visible on the website
+   */
+  isPublished?: boolean | null;
+  /**
+   * Featured resources are highlighted on the homepage and resources page
+   */
+  isFeatured?: boolean | null;
+  /**
+   * Who can access this resource
+   */
+  accessLevel?: ('public' | 'members' | 'restricted') | null;
+  /**
+   * Number of times this resource has been downloaded (auto-updated)
+   */
+  downloadCount?: number | null;
+  /**
+   * Number of times this resource has been viewed (auto-updated)
+   */
+  viewCount?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -565,6 +748,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'research-demos';
         value: number | ResearchDemo;
+      } | null)
+    | ({
+        relationTo: 'resources';
+        value: number | Resource;
       } | null)
     | ({
         relationTo: 'users';
@@ -795,6 +982,78 @@ export interface ResearchDemosSelect<T extends boolean = true> {
   isExternal?: T;
   researchArea?: T;
   order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resources_select".
+ */
+export interface ResourcesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  summary?: T;
+  resourceType?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  downloadInfo?:
+    | T
+    | {
+        hasDownload?: T;
+        file?: T;
+        downloadUrl?: T;
+        fileSize?: T;
+        format?: T;
+        requirements?: T;
+      };
+  courseInfo?:
+    | T
+    | {
+        isCourse?: T;
+        instructor?: T;
+        duration?: T;
+        difficulty?: T;
+        prerequisites?: T;
+        syllabus?: T;
+      };
+  publicationInfo?:
+    | T
+    | {
+        isPublication?: T;
+        authors?: T;
+        journal?: T;
+        year?: T;
+        doi?: T;
+        abstract?: T;
+      };
+  links?:
+    | T
+    | {
+        title?: T;
+        url?: T;
+        type?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        caption?: T;
+        id?: T;
+      };
+  displayOrder?: T;
+  isPublished?: T;
+  isFeatured?: T;
+  accessLevel?: T;
+  downloadCount?: T;
+  viewCount?: T;
   updatedAt?: T;
   createdAt?: T;
 }

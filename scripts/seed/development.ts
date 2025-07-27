@@ -11,6 +11,7 @@ import {
     PositionSeedData,
     ResearchAreaSeedData,
     ResearchDemoSeedData,
+    ResourceSeedData,
     SeedResult,
     SeedSummary,
 } from './shared/types'
@@ -32,7 +33,7 @@ interface TempMemberSeedData extends Omit<MemberSeedData, 'mentor'> {
 const SEED_CONFIG = {
   environment: 'development' as const,
   clearExisting: true,
-  collections: ['members', 'positions', 'research-areas', 'research-demos', 'events'],
+  collections: ['members', 'positions', 'research-areas', 'research-demos', 'events', 'resources'],
   positions: {
     count: 5,
   },
@@ -52,6 +53,13 @@ const SEED_CONFIG = {
     upcoming: 8,
     ongoing: 2,
     completed: 20,
+  },
+  resources: {
+    datasets: 5,
+    courses: 4,
+    software: 3,
+    publications: 6,
+    tutorials: 3,
   },
 }
 
@@ -723,6 +731,300 @@ async function seedEvents(payload: Payload): Promise<SeedResult> {
   return result
 }
 
+async function seedResources(payload: Payload): Promise<SeedResult> {
+  console.log('📚 Seeding resources...')
+  const result: SeedResult = {
+    success: true,
+    created: 0,
+    updated: 0,
+    errors: [],
+    collection: 'resources',
+  }
+
+  const resources: ResourceSeedData[] = []
+
+  // Dataset resources
+  const datasetNames = [
+    'SEED Emotion Recognition Dataset',
+    'EEG BCI Motor Imagery Dataset',
+    'Chinese-Vietnamese Parallel Corpus',
+    'Medical Image Classification Dataset',
+    'Time Series Anomaly Detection Dataset'
+  ]
+
+  for (let i = 0; i < SEED_CONFIG.resources.datasets; i++) {
+    const title = datasetNames[i] || `Research Dataset ${i + 1}`
+    resources.push({
+      title,
+      slug: generateSlug(title),
+      description: convertToRichText(faker.lorem.paragraphs(2, '\n\n')),
+      summary: faker.lorem.paragraph(),
+      resourceType: 'dataset',
+      category: faker.helpers.arrayElement(['EEG Data', 'Computer Vision', 'Natural Language Processing', 'Medical Imaging', 'Time Series']),
+      tags: Array.from({ length: faker.number.int({ min: 2, max: 4 }) }, () => ({
+        tag: faker.helpers.arrayElement(['Machine Learning', 'Deep Learning', 'EEG', 'BCI', 'Classification', 'Dataset', 'Research'])
+      })),
+      downloadInfo: {
+        hasDownload: true,
+        downloadUrl: `https://datasets.bcmi.sjtu.edu.cn/${generateSlug(title)}.zip`,
+        fileSize: faker.helpers.arrayElement(['1.2MB', '458MB', '10.8GB', '2.3GB', '756MB']),
+        format: faker.helpers.arrayElement(['ZIP', 'RAR', 'TAR.GZ', 'CSV', 'JSON']),
+        requirements: faker.helpers.arrayElement([
+          'Python 3.7+, NumPy, Pandas',
+          'MATLAB R2019b or later',
+          'No special requirements',
+          'Python with scipy and sklearn'
+        ])
+      },
+      links: [
+        {
+          title: 'Documentation',
+          url: `https://docs.bcmi.sjtu.edu.cn/${generateSlug(title)}`,
+          type: 'docs'
+        },
+        {
+          title: 'GitHub Repository',
+          url: `https://github.com/bcmi/${generateSlug(title)}`,
+          type: 'github'
+        }
+      ],
+      displayOrder: i + 1,
+      isPublished: true,
+      isFeatured: faker.datatype.boolean(0.4),
+      accessLevel: 'public',
+      downloadCount: faker.number.int({ min: 10, max: 500 }),
+      viewCount: faker.number.int({ min: 50, max: 2000 })
+    })
+  }
+
+  // Course resources
+  const courseNames = [
+    'Introduction to Machine Learning',
+    'Deep Learning Fundamentals',
+    'Brain-Computer Interface Programming',
+    'Statistical Learning Theory'
+  ]
+
+  const instructors = [
+    'Prof. Hai Zhao',
+    'Dr. Wei Chen',
+    'Prof. Li Wang',
+    'Dr. Zhang Ming'
+  ]
+
+  for (let i = 0; i < SEED_CONFIG.resources.courses; i++) {
+    const title = courseNames[i] || `Course ${i + 1}`
+    resources.push({
+      title,
+      slug: generateSlug(title),
+      description: convertToRichText(faker.lorem.paragraphs(3, '\n\n')),
+      summary: faker.lorem.paragraph(),
+      resourceType: 'course',
+      category: faker.helpers.arrayElement(['Machine Learning', 'Programming', 'Theory', 'Application']),
+      tags: Array.from({ length: faker.number.int({ min: 2, max: 4 }) }, () => ({
+        tag: faker.helpers.arrayElement(['Course', 'Education', 'Tutorial', 'Learning', 'Programming', 'Theory'])
+      })),
+      courseInfo: {
+        isCourse: true,
+        instructor: faker.helpers.arrayElement(instructors),
+        duration: faker.helpers.arrayElement(['8 weeks', '12 weeks', '6 weeks', '16 weeks']),
+        difficulty: faker.helpers.arrayElement(['beginner', 'intermediate', 'advanced']),
+        prerequisites: faker.lorem.sentence(),
+        syllabus: convertToRichText(faker.lorem.paragraphs(4, '\n\n'))
+      },
+      links: [
+        {
+          title: 'Course Materials',
+          url: `https://courses.bcmi.sjtu.edu.cn/${generateSlug(title)}`,
+          type: 'website'
+        },
+        {
+          title: 'Video Lectures',
+          url: `https://video.bcmi.sjtu.edu.cn/${generateSlug(title)}`,
+          type: 'video'
+        }
+      ],
+      displayOrder: SEED_CONFIG.resources.datasets + i + 1,
+      isPublished: true,
+      isFeatured: faker.datatype.boolean(0.5),
+      accessLevel: faker.helpers.arrayElement(['public', 'members']),
+      viewCount: faker.number.int({ min: 100, max: 1500 })
+    })
+  }
+
+  // Software/Tool resources
+  const softwareNames = [
+    'EEG Signal Processing Toolkit',
+    'Neural Network Visualization Tool',
+    'BCI Data Analyzer'
+  ]
+
+  for (let i = 0; i < SEED_CONFIG.resources.software; i++) {
+    const title = softwareNames[i] || `Software Tool ${i + 1}`
+    resources.push({
+      title,
+      slug: generateSlug(title),
+      description: convertToRichText(faker.lorem.paragraphs(2, '\n\n')),
+      summary: faker.lorem.paragraph(),
+      resourceType: 'software',
+      category: faker.helpers.arrayElement(['EEG Tools', 'Visualization', 'Analysis', 'Development']),
+      tags: Array.from({ length: faker.number.int({ min: 2, max: 4 }) }, () => ({
+        tag: faker.helpers.arrayElement(['Software', 'Tool', 'EEG', 'Analysis', 'Visualization', 'Open Source'])
+      })),
+      downloadInfo: {
+        hasDownload: true,
+        downloadUrl: `https://software.bcmi.sjtu.edu.cn/${generateSlug(title)}/download`,
+        fileSize: faker.helpers.arrayElement(['25MB', '156MB', '89MB']),
+        format: 'ZIP',
+        requirements: 'Python 3.8+, PyQt5, NumPy, SciPy'
+      },
+      links: [
+        {
+          title: 'GitHub Repository',
+          url: `https://github.com/bcmi/${generateSlug(title)}`,
+          type: 'github'
+        },
+        {
+          title: 'User Guide',
+          url: `https://docs.bcmi.sjtu.edu.cn/${generateSlug(title)}/guide`,
+          type: 'docs'
+        },
+        {
+          title: 'Online Demo',
+          url: `https://demo.bcmi.sjtu.edu.cn/${generateSlug(title)}`,
+          type: 'demo'
+        }
+      ],
+      displayOrder: SEED_CONFIG.resources.datasets + SEED_CONFIG.resources.courses + i + 1,
+      isPublished: true,
+      isFeatured: faker.datatype.boolean(0.3),
+      accessLevel: 'public',
+      downloadCount: faker.number.int({ min: 50, max: 800 }),
+      viewCount: faker.number.int({ min: 200, max: 3000 })
+    })
+  }
+
+  // Publication resources
+  const publicationTitles = [
+    'Deep Learning for EEG Signal Classification',
+    'A Novel Approach to Brain-Computer Interfaces',
+    'Machine Learning in Medical Image Analysis',
+    'Attention Mechanisms in Neural Networks',
+    'Transfer Learning for EEG-based Emotion Recognition',
+    'Convolutional Neural Networks for Time Series Analysis'
+  ]
+
+  const journals = [
+    'IEEE Transactions on Neural Systems and Rehabilitation Engineering',
+    'Journal of Neural Engineering',
+    'NeuroImage',
+    'IEEE Transactions on Biomedical Engineering',
+    'Nature Machine Intelligence',
+    'Frontiers in Neuroscience'
+  ]
+
+  for (let i = 0; i < SEED_CONFIG.resources.publications; i++) {
+    const title = publicationTitles[i] || `Research Publication ${i + 1}`
+    const year = faker.number.int({ min: 2020, max: 2024 })
+    resources.push({
+      title,
+      slug: generateSlug(title),
+      description: convertToRichText(faker.lorem.paragraphs(1, '\n\n')),
+      summary: faker.lorem.paragraph(),
+      resourceType: 'publication',
+      category: faker.helpers.arrayElement(['EEG Research', 'Deep Learning', 'Computer Vision', 'BCI']),
+      tags: Array.from({ length: faker.number.int({ min: 3, max: 5 }) }, () => ({
+        tag: faker.helpers.arrayElement(['Publication', 'Research', 'Peer-reviewed', 'IEEE', 'EEG', 'Deep Learning', 'BCI'])
+      })),
+      publicationInfo: {
+        isPublication: true,
+        authors: `${faker.person.fullName()}, ${faker.person.fullName()}, ${faker.person.fullName()}`,
+        journal: faker.helpers.arrayElement(journals),
+        year,
+        doi: `10.1109/${faker.string.alphanumeric({ length: 8 })}`,
+        abstract: convertToRichText(faker.lorem.paragraphs(2, '\n\n'))
+      },
+      links: [
+        {
+          title: 'Read on IEEE Xplore',
+          url: `https://ieeexplore.ieee.org/document/${faker.number.int({ min: 8000000, max: 9999999 })}`,
+          type: 'publication'
+        },
+        {
+          title: 'arXiv Preprint',
+          url: `https://arxiv.org/abs/24${faker.string.numeric(2)}.${faker.string.numeric(5)}`,
+          type: 'publication'
+        }
+      ],
+      displayOrder: SEED_CONFIG.resources.datasets + SEED_CONFIG.resources.courses + SEED_CONFIG.resources.software + i + 1,
+      isPublished: true,
+      isFeatured: faker.datatype.boolean(0.2),
+      accessLevel: 'public',
+      viewCount: faker.number.int({ min: 80, max: 1200 })
+    })
+  }
+
+  // Tutorial resources
+  const tutorialNames = [
+    'Getting Started with EEG Analysis',
+    'Python for Brain-Computer Interfaces',
+    'Deep Learning Tutorial for Beginners'
+  ]
+
+  for (let i = 0; i < SEED_CONFIG.resources.tutorials; i++) {
+    const title = tutorialNames[i] || `Tutorial ${i + 1}`
+    resources.push({
+      title,
+      slug: generateSlug(title),
+      description: convertToRichText(faker.lorem.paragraphs(2, '\n\n')),
+      summary: faker.lorem.paragraph(),
+      resourceType: 'tutorial',
+      category: faker.helpers.arrayElement(['Programming', 'EEG Analysis', 'Machine Learning']),
+      tags: Array.from({ length: faker.number.int({ min: 2, max: 4 }) }, () => ({
+        tag: faker.helpers.arrayElement(['Tutorial', 'Guide', 'Beginner', 'Python', 'EEG', 'Programming'])
+      })),
+      courseInfo: {
+        isCourse: true,
+        instructor: faker.helpers.arrayElement(instructors),
+        duration: faker.helpers.arrayElement(['2 hours', '4 hours', '6 hours']),
+        difficulty: 'beginner',
+        prerequisites: 'Basic programming knowledge'
+      },
+      links: [
+        {
+          title: 'Tutorial Website',
+          url: `https://tutorials.bcmi.sjtu.edu.cn/${generateSlug(title)}`,
+          type: 'website'
+        },
+        {
+          title: 'Code Examples',
+          url: `https://github.com/bcmi/tutorial-${generateSlug(title)}`,
+          type: 'github'
+        }
+      ],
+      displayOrder: SEED_CONFIG.resources.datasets + SEED_CONFIG.resources.courses + SEED_CONFIG.resources.software + SEED_CONFIG.resources.publications + i + 1,
+      isPublished: true,
+      isFeatured: faker.datatype.boolean(0.4),
+      accessLevel: 'public',
+      viewCount: faker.number.int({ min: 150, max: 2500 })
+    })
+  }
+
+  // Create all resources
+  for (const resource of resources) {
+    try {
+      await upsertDocument(payload, 'resources', resource, 'slug')
+      result.created++
+      await wait(100) // Small delay to avoid overwhelming the database
+    } catch (error) {
+      result.errors.push(`Failed to create resource ${resource.title}: ${error}`)
+      result.success = false
+    }
+  }
+
+  return result
+}
+
 async function seedNavigation(payload: Payload): Promise<SeedResult> {
   console.log('🧭 Seeding navigation...')
   const result: SeedResult = {
@@ -815,6 +1117,10 @@ export async function runDevelopmentSeed(): Promise<SeedSummary> {
       // Seed events (independent of other collections)
       await wait(1000)
       results.push(await seedEvents(payload))
+
+      // Seed resources (independent of other collections)
+      await wait(1000)
+      results.push(await seedResources(payload))
 
       // Seed navigation last
       results.push(await seedNavigation(payload))
