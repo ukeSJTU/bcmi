@@ -5,11 +5,20 @@
 interface RevalidationConfig {
   tags?: string[]
   paths?: string[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dynamicPaths?: (doc: any) => string[]
   collectionName: string
 }
 
-export async function triggerRevalidation(config: RevalidationConfig): Promise<void> {
-  const { tags = [], paths = [], collectionName } = config
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function triggerRevalidation(config: RevalidationConfig, doc?: any): Promise<void> {
+  const { tags = [], paths = [], dynamicPaths, collectionName } = config
+  
+  // Add dynamic paths if provided
+  const allPaths = [...paths]
+  if (dynamicPaths && doc) {
+    allPaths.push(...dynamicPaths(doc))
+  }
   
   try {
     const frontendUrl = process.env.FRONTEND_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
@@ -45,7 +54,7 @@ export async function triggerRevalidation(config: RevalidationConfig): Promise<v
     }
 
     // Revalidate by paths
-    for (const path of paths) {
+    for (const path of allPaths) {
       console.log(`[${collectionName} Hook] Triggering revalidation for path: ${path}`)
       
       const response = await fetch(revalidateUrl, {
@@ -74,9 +83,10 @@ export async function triggerRevalidation(config: RevalidationConfig): Promise<v
  * Standard afterChange hook that can be used across collections
  */
 export function createRevalidationHook(config: Omit<RevalidationConfig, 'collectionName'> & { collectionName: string }) {
-  return async ({ operation }: { operation: string }) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return async ({ doc, operation }: { doc: any, operation: string }) => {
     if (operation === 'update' || operation === 'create' || operation === 'delete') {
-      await triggerRevalidation(config)
+      await triggerRevalidation(config, doc)
     }
   }
 }

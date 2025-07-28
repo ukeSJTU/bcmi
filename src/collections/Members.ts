@@ -165,6 +165,7 @@ export const Members: CollectionConfig = {
         collectionName: 'Members',
         tags: ['members', 'positions'], // Members page depends on both members and positions data
         paths: ['/members'], // Also revalidate the members page directly
+        dynamicPaths: (doc) => [`/members/${doc.id}`], // Revalidate the individual member page
       })
     ],
     afterDelete: [
