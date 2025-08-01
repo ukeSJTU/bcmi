@@ -432,6 +432,14 @@ export const Resources: CollectionConfig = {
         collectionName: 'Resources',
         tags: ['resources'],
         paths: ['/resources'],
+        dynamicPaths: (doc) => {
+          const paths = [`/resources/${doc.id}`]
+          // If this is a featured resource, also revalidate homepage
+          if (doc.isFeatured) {
+            paths.push('/')
+          }
+          return paths
+        },
       })
     ],
     afterDelete: [

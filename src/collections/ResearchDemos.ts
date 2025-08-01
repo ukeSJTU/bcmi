@@ -85,6 +85,7 @@ export const ResearchDemos: CollectionConfig = {
         collectionName: 'ResearchDemos',
         tags: ['research-demos', 'research'],
         paths: ['/research'], // Research demos appear on research page
+        dynamicPaths: (doc) => [`/research/${doc.id}`], // Revalidate individual research demo page
       })
     ],
     afterDelete: [

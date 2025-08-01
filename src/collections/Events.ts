@@ -339,6 +339,14 @@ export const Events: CollectionConfig = {
         collectionName: 'Events',
         tags: ['events'],
         paths: ['/events'],
+        dynamicPaths: (doc) => {
+          const paths = [`/events/${doc.id}`]
+          // If this is a featured event, also revalidate homepage
+          if (doc.isFeatured) {
+            paths.push('/')
+          }
+          return paths
+        },
       })
     ],
     afterDelete: [
