@@ -1,0 +1,67 @@
+{
+  "pageTitle": "Events",
+  "url": "https://bcmi.sjtu.edu.cn/event.html",
+  
+  "upcomingEvents": {
+    "title": "Upcoming Events",
+    "conferences": [
+      {
+        "name": "ACL short",
+        "deadline": "2014-3-12",
+        "website": "http://www.cs.jhu.edu/ACL2014/"
+      },
+      {
+        "name": "Coling",
+        "deadline": "2014-3-21", 
+        "website": "http://www.coling-2014.org/important-dates.php"
+      },
+      {
+        "name": "interspeech",
+        "deadline": "2014-3-24",
+        "website": "http://www.interspeech2014.org/"
+      },
+      {
+        "name": "Conil system result",
+        "deadline": "2014-3-26",
+        "website": "http://www.comp.nus.edu.sg/~nlp/conll14st.html"
+      },
+      {
+        "name": "Conil paper submit",
+        "deadline": "2014-4-2",
+        "website": "http://www.comp.nus.edu.sg/~nlp/conll14st.html"
+      },
+      {
+        "name": "EMNLP",
+        "deadline": "2014-6-2",
+        "website": "http://emnlp2014.org/"
+      }
+    ]
+  },
+  
+  "pastEvents": {
+    "title": "Past Events",
+    "events": [
+      {
+        "date": "2013-07-22",
+        "title": "Dragon Star Program 2013",
+        "description": "This one-week, short-term course covers computational models and algorithms for auditory perception and processing. Topics include auditory scene analysis, pitch analysis, sound localization, speech and music processing (enhancement, segregation, and transcription), speech and speaker recognition, and modeling of the auditory system. The objectives of this course include understanding a set of physiological/psychoacoustic phenomena of audition, comprehension of modern theories, models, and algorithms for acoustic/auditory analysis, and being able to solve practical problems in audio and speech processing.",
+        "moreDetailsLink": "See more detail ›"
+      },
+      {
+        "date": "2010-06-21", 
+        "title": "Dragon Star project 2010",
+        "description": "",
+        "moreDetailsLink": "See more detail ›"
+      }
+    ]
+  },
+  
+  "sidebar": {
+    "title": "EVENTS",
+    "categories": [
+      "Upcoming Events",
+      "Coming Conference", 
+      "Past Events"
+    ]
+  }
+}

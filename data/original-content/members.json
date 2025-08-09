@@ -1,0 +1,79 @@
+{
+  "pageTitle": "Members",
+  "url": "https://bcmi.sjtu.edu.cn/member.html",
+  
+  "categories": [
+    {
+      "name": "Faculty Members",
+      "active": true,
+      "members": [
+        {
+          "name": "Lei Xu",
+          "title": "Professor",
+          "department": "Department of Computer Science and Engineering, Shanghai Jiao Tong University",
+          "photo": "lei_xu.jpg",
+          "researchInterests": "STATISTICAL LEARNING (unsupervised, supervised, unified theory, model selection) and applications to neural computing, financial engineering & time series, signal separation, bioinformatics; COMPUTER VISION (Random Hough Transform, detection of shape and motion of multiple objects)."
+        },
+        {
+          "name": "Baoliang Lu",
+          "title": "Professor", 
+          "department": "Department of Computer Science and Engineering, Shanghai Jiao Tong University",
+          "photo": "baoliang_lu.jpg",
+          "researchInterests": "Brain-like Computing, Neural Networks, Machine Learning, Brain-Computer Interface, Affective Computing."
+        },
+        {
+          "name": "Liqing Zhang",
+          "title": "Professor",
+          "department": "Department of Computer Science and Engineering, Shanghai Jiao Tong University", 
+          "photo": "liqing_zhang.jpg",
+          "researchInterests": "brain-liking computing model and its computing mechanism, visual information representation and global feature analysis, brain signal processing and brain-computer interface, perception and cognition computing model, statistical learning and inference."
+        },
+        {
+          "name": "Hongtao Lu",
+          "title": "Professor",
+          "department": "Department of Computer Science and Engineering, Shanghai Jiao Tong University",
+          "photo": "hongtao_lu.jpg", 
+          "researchInterests": "Machine Learning, Pattern Recognition, Computer Vision, Information Hiding, Complex Networks."
+        },
+        {
+          "name": "Kai Yu",
+          "title": "Professor",
+          "department": "Department of Computer Science and Engineering, Shanghai Jiao Tong University",
+          "photo": "kai_yu.jpg",
+          "researchInterests": "Machine Learning, Speech Recognition, Natural Language Processing."
+        }
+      ]
+    },
+    {
+      "name": "Postdoctor and PhD. Students",
+      "active": false,
+      "members": []
+    },
+    {
+      "name": "Graduate Students", 
+      "active": false,
+      "members": []
+    },
+    {
+      "name": "Undergraduate Students",
+      "active": false,
+      "members": []
+    },
+    {
+      "name": "Alumni/Alumnae",
+      "active": false,
+      "members": []
+    }
+  ],
+  
+  "sidebar": {
+    "title": "MEMBERS IN BCMI",
+    "categories": [
+      "Faculty Members",
+      "Postdoctor and PhD. Students", 
+      "Graduate Students",
+      "Undergraduate Students",
+      "Alumni/Alumnae"
+    ]
+  }
+}

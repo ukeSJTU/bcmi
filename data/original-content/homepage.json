@@ -1,0 +1,45 @@
+{
+  "pageTitle": "Homepage/About",
+  "url": "https://bcmi.sjtu.edu.cn/",
+  
+  "siteHeader": {
+    "title": "BCMI",
+    "subtitle": "Brain-like Computing & Machine Intelligence",
+    "logo": "Logo with brain icon"
+  },
+  
+  "heroBanner": {
+    "welcomeMessage": "Welcome to the New Website of BCMI!",
+    "subtitle": "Bravo! The New Website is Online! More beautiful and more convenient!",
+    "carouselImages": [
+      {
+        "text": "Brain-like Computing & Machine Intelligence",
+        "description": "Scientific visualization of brain and technology"
+      }
+    ]
+  },
+  
+  "mainContent": {
+    "title": "Welcome to the BCMI Laboratory!",
+    "description": "Center for Brain-like Computing and Machine Intelligence is founded by Prof. Bao-Liang Lu and Prof. Liqing Zhang. The long term mission of the center is to understand the mechanism of intelligent information processing and cognitive process in the brain and to develop new type computing structures and algorithms for information technology. To this end, by means of advanced EEG equipment and system modeling technology, we are to develop new type models for neural information presentation, feature analysis and pattern recognition. Current research interests include Brain Computer Interface, Computer Vision, Speech Signal Processing, Natural Language Processing, Bioinformatics, Machine Learning and Cognitive Computing."
+  },
+  
+  "contactInfo": {
+    "title": "Contact Information",
+    "phone": "+86(21)34204421",
+    "address": "3-East 307 SEIEE Building, No. 800 Dongchuan Road, Minhang District, Shanghai, 200240"
+  },
+  
+  "navigation": [
+    {"text": "About", "href": "/", "active": true},
+    {"text": "Research", "href": "/research"},
+    {"text": "Members", "href": "/members"},
+    {"text": "Events", "href": "/events"},
+    {"text": "Resources", "href": "/resources"}
+  ],
+  
+  "footer": {
+    "labName": "Center for Brain-Like Computing and Machine Intelligence",
+    "copyright": "All Rights Reserved © 2013"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "pageTitle": "Research",
+  "url": "https://bcmi.sjtu.edu.cn/research.html",
+  
+  "researchAreas": [
+    {
+      "title": "Brain Computer Interface and EEG Data Processing",
+      "description": "By using theory and methods of statistical learning and information geometry, such as PCA/ICA, NMF, NTF (Nonnegative Tensor Factorization), we are",
+      "bulletPoints": [
+        "To investigate EEG noise reduction, event-related potentials, pattern analysis for imaginary motion evoked potentials and vigilance pattern analysis.",
+        "To study the spatial-temporal characteristics of evoked potentials and their dynamics.",
+        "To develop pattern classification methods for evoked potentials, imaginary motion potentials and vigilance",
+        "To design EEG based vigilance analysis system and brain-computer interaction systems"
+      ],
+      "demos": [
+        {
+          "title": "EEG-based Wheelchair",
+          "images": [
+            "wheelchair_demo_1.jpg",
+            "wheelchair_demo_2.jpg"
+          ]
+        },
+        {
+          "title": "Multi-person Car Racing System",
+          "images": [
+            "car_racing_demo.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Computer Vision",
+      "description": "Our current research includes:",
+      "bulletPoints": [
+        "Computational Models For Visual Selective Attention",
+        "Visual Information Representation",
+        "Global Visual Feature Analysis",
+        "Object Detection",
+        "Age Estimation And Gender Classification",
+        "Face Recognition"
+      ],
+      "demos": []
+    },
+    {
+      "title": "Speech Recognition",
+      "description": "",
+      "bulletPoints": [],
+      "demos": []
+    },
+    {
+      "title": "Natural Language Processing",
+      "description": "",
+      "bulletPoints": [],
+      "demos": []
+    }
+  ],
+  
+  "sidebar": {
+    "title": "RESEARCH TOPICS",
+    "categories": [
+      "Brain Computer Interface and EEG Data Processing",
+      "Computer Vision", 
+      "Speech Recognition",
+      "Natural Language Processing"
+    ]
+  }
+}

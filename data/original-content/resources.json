@@ -1,0 +1,84 @@
+{
+  "pageTitle": "Resources",
+  "url": "https://bcmi.sjtu.edu.cn/resource.html",
+  
+  "dataSets": {
+    "title": "Data Sets",
+    "items": [
+      {
+        "name": "parallelcorpus.zh-vi.zip",
+        "size": "1.2MB",
+        "description": "Chinese-Vietname parallel corpus used for training machine translation model.",
+        "downloadLink": "Download"
+      },
+      {
+        "name": "sc2tc.dict.zip",
+        "size": "17KB", 
+        "description": "The simple Chinese and traditional Chinese character dict",
+        "downloadLink": "Download"
+      },
+      {
+        "name": "en.dict.zip",
+        "size": "1.3MB",
+        "description": "English word dict",
+        "downloadLink": "Download"
+      },
+      {
+        "name": "EEGDataset.rar",
+        "size": "458MB",
+        "description": "Data set for single trial 64-channels EEG classification in BCI", 
+        "downloadLink": "Download"
+      },
+      {
+        "name": "SEED_Dataset.rar",
+        "size": "10.8GB",
+        "description": "A dataset for emotion recognition using EEG signals",
+        "downloadLink": "Download"
+      },
+      {
+        "name": "lidf.zip",
+        "size": "27.3MB",
+        "description": "Labeled Infrared-Depth Face Dataset",
+        "downloadLink": "Download"
+      }
+    ]
+  },
+  
+  "tutorialsAndCourses": {
+    "title": "Tutorial & Courses",
+    "items": [
+      {
+        "title": "[COURSE]A Gentle Introduction to Programming Using Python (By Hai Zhao)",
+        "description": "This course will provide a gentle, yet intense, introduction to programming using Python for highly motivated students with little or no prior experience in programming. The course will focus on planning and organizing programs, as well as the grammar of the Python programming language. The course is designed to help prepare students for 6.01 Introduction to EECS I. 6.01 assumes some knowledge of Python upon entering; the course material for 6.189 has been specially designed to make sure that concepts important to 6.01 are covered. This course is offered during the Independent Activities Period (IAP), which is a special 4-week term at MIT that runs from the first week of January until the end of the month."
+      },
+      {
+        "title": "[COURSE]Statistic Learning Course", 
+        "description": "The class introduces the theory and algorithms of computational learning in the framework of statistics and functional analysis. It gives an in-depth discussion of state of the art machine learning algorithms, for regression and classification, variable selection, manifold learning and transfer learning. The class focuses on the unifying role of regularization."
+      },
+      {
+        "title": "[COURSE]Artificial Intelligence Course",
+        "description": "Artificial Intelligence (AI) is still a research discipline in attempting to understand the mechanisms underlying intelligent behavior and to build "intelligent systems" from variety of mechanical and electronic devices. This course is to offer an introduction to artificial intelligence covering from mechanism, models, algorithm to some typical AI applications as well. The course AI covers the following interesting topics: a brief history of AI, research and philosophical questions faced by AI practitioners, representing and solving AI problems in a state-space"
+      }
+    ]
+  },
+  
+  "designResources": {
+    "title": "Design Resources",
+    "items": []
+  },
+  
+  "links": {
+    "title": "Links", 
+    "items": []
+  },
+  
+  "sidebar": {
+    "title": "RESOURCES",
+    "categories": [
+      "Data sets",
+      "Tutorials & Courses",
+      "Design Resources", 
+      "Links"
+    ]
+  }
+}
