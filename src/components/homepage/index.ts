@@ -1,0 +1,1 @@
+export { ResearchCarousel } from './research-carousel'

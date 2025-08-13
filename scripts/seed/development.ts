@@ -456,6 +456,9 @@ async function seedResearchDemos(payload: Payload): Promise<SeedResult> {
       isExternal: faker.datatype.boolean(0.3), // 30% chance of being external
       researchArea: randomArea.id,
       order: i + 1,
+      isFeatured: faker.datatype.boolean(0.25), // 25% chance of being featured
+      carouselTitle: faker.datatype.boolean(0.5) ? faker.lorem.words({ min: 3, max: 6 }) : undefined,
+      carouselDescription: faker.datatype.boolean(0.7) ? faker.lorem.sentence({ min: 8, max: 15 }) : undefined,
     }
 
     try {

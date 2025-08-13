@@ -510,6 +510,22 @@ export interface ResearchDemo {
    * Order in which this demo appears within its research area
    */
   order?: number | null;
+  /**
+   * Featured research demos are highlighted in the homepage carousel
+   */
+  isFeatured?: boolean | null;
+  /**
+   * High-quality image for homepage carousel (recommended: 1200x600px)
+   */
+  carouselImage?: (number | null) | Media;
+  /**
+   * Optional custom title for carousel display (uses demo title if not provided)
+   */
+  carouselTitle?: string | null;
+  /**
+   * Short description for carousel display (uses demo description if not provided)
+   */
+  carouselDescription?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -982,6 +998,10 @@ export interface ResearchDemosSelect<T extends boolean = true> {
   isExternal?: T;
   researchArea?: T;
   order?: T;
+  isFeatured?: T;
+  carouselImage?: T;
+  carouselTitle?: T;
+  carouselDescription?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -75,9 +75,10 @@ export interface ResearchAreaSeedData extends Omit<ResearchArea, 'id' | 'updated
   // All fields from ResearchArea except auto-generated ones
 }
 
-export interface ResearchDemoSeedData extends Omit<ResearchDemo, 'id' | 'updatedAt' | 'createdAt' | 'researchArea' | 'image'> {
+export interface ResearchDemoSeedData extends Omit<ResearchDemo, 'id' | 'updatedAt' | 'createdAt' | 'researchArea' | 'image' | 'carouselImage'> {
   researchArea: number // Numeric ID for seeding
   image?: string // file path for seeding, will become media relationship
+  carouselImage?: string // file path for seeding, will become media relationship
 }
 
 export interface MediaSeedData {

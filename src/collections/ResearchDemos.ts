@@ -9,7 +9,7 @@ export const ResearchDemos: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'researchArea', 'order'],
+    defaultColumns: ['title', 'researchArea', 'isFeatured', 'order'],
   },
   access: {
     read: () => true,
@@ -78,6 +78,43 @@ export const ResearchDemos: CollectionConfig = {
         description: 'Order in which this demo appears within its research area',
       },
     },
+    {
+      name: 'isFeatured',
+      type: 'checkbox',
+      defaultValue: false,
+      label: 'Featured Research',
+      admin: {
+        description: 'Featured research demos are highlighted in the homepage carousel',
+      },
+    },
+    {
+      name: 'carouselImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Carousel Image',
+      admin: {
+        description: 'High-quality image for homepage carousel (recommended: 1200x600px)',
+        condition: (data) => data.isFeatured,
+      },
+    },
+    {
+      name: 'carouselTitle',
+      type: 'text',
+      label: 'Carousel Title',
+      admin: {
+        description: 'Optional custom title for carousel display (uses demo title if not provided)',
+        condition: (data) => data.isFeatured,
+      },
+    },
+    {
+      name: 'carouselDescription',
+      type: 'textarea',
+      label: 'Carousel Description',
+      admin: {
+        description: 'Short description for carousel display (uses demo description if not provided)',
+        condition: (data) => data.isFeatured,
+      },
+    },
   ],
   hooks: {
     afterChange: [
@@ -85,7 +122,14 @@ export const ResearchDemos: CollectionConfig = {
         collectionName: 'ResearchDemos',
         tags: ['research-demos', 'research'],
         paths: ['/research'], // Research demos appear on research page
-        dynamicPaths: (doc) => [`/research/${doc.id}`], // Revalidate individual research demo page
+        dynamicPaths: (doc) => {
+          const paths = [`/research/${doc.id}`]
+          // If this is a featured research demo, also revalidate homepage
+          if (doc.isFeatured) {
+            paths.push('/')
+          }
+          return paths
+        },
       })
     ],
     afterDelete: [
