@@ -13,6 +13,12 @@ interface RevalidationConfig {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function triggerRevalidation(config: RevalidationConfig, doc?: any): Promise<void> {
   const { tags = [], paths = [], dynamicPaths, collectionName } = config
+
+  // Skip revalidation process during build time
+  if (process.env.SKIP_REVALIDATION_DURING_BUILD === 'true') {
+    console.log(`[${collectionName} Hook] Skipping revalidation during build`)
+    return
+  }
   
   // Add dynamic paths if provided
   const allPaths = [...paths]
