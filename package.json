@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.0",
-    "@payloadcms/db-postgres": "^3.49.0",
+    "@payloadcms/db-sqlite": "^3.53.0",
     "@payloadcms/next": "^3.49.0",
     "@payloadcms/richtext-lexical": "^3.49.0",
     "@radix-ui/react-accordion": "^1.2.11",
