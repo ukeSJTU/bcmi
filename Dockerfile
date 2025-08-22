@@ -51,25 +51,28 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Copy built application
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/ ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/ ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 # COPY --from=builder /app/.next/static ./.next/static
 
 # Copy database from builder stage
-COPY --from=builder /app/data ./data
+COPY --from=builder --chown=nextjs:nodejs /app/data ./data
 
-COPY --from=builder /app/scripts ./scripts
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 # COPY --from=builder /app/package.json ./package.json
 # COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/src ./src
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+
+# Create cache directory with correct ownership
+RUN mkdir -p .next/cache && chown nextjs:nodejs .next/cache
 
 # Set ownership for directories
-RUN mkdir -p .next/cache
-RUN chown -R nextjs:nodejs .next
-RUN chown -R nextjs:nodejs data
-RUN chown -R nextjs:nodejs node_modules
+# RUN mkdir -p .next/cache
+# RUN chown -R nextjs:nodejs .next
+# RUN chown -R nextjs:nodejs data
+# RUN chown -R nextjs:nodejs node_modules
 
 # Copy and set permissions for entrypoint script
 COPY scripts/docker-entrypoint.sh ./docker-entrypoint.sh
