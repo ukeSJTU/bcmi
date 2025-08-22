@@ -23,6 +23,10 @@ RUN pnpm config set registry https://registry.npmmirror.com
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ENV PAYLOAD_SECRET=914c0e84da3ca5c74d4fc0e0
+ENV DATABASE_URI=file:./data/payload.db
+ENV NODE_ENV=production
+
 # Build the Next.js application
 RUN pnpm build
 
