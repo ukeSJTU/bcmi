@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+  bcmi-web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URI=file:./data/payload.db
+      - PAYLOAD_SECRET=914c0e84da3ca5c74d4fc0e0
+      - REVALIDATION_SECRET=revalidate_bcmi_2025_secure_key
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+    volumes:
+      # Persist SQLite database
+      - bcmi-data:/app/data
+      # Persist uploaded media
+      - bcmi-media:/app/public/media
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  bcmi-data:
+    driver: local
+  bcmi-media:
+    driver: local

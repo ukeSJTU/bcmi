@@ -1,0 +1,16 @@
+.next
+node_modules
+.git
+.gitignore
+README.md
+Dockerfile
+docker-compose.yml
+.env
+.env.local
+.env.example
+.vercel
+.claude
+data/payload.db
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
