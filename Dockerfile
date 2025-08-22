@@ -26,6 +26,16 @@ ENV PAYLOAD_SECRET=914c0e84da3ca5c74d4fc0e0
 ENV DATABASE_URI=file:./data/payload.db
 ENV NODE_ENV=production
 
+# Create data folder
+RUN mkdir -p data
+
+# Create and apply payload migration
+RUN pnpm payload migrate:create
+RUN pnpm payload migrate
+
+# Seed data
+RUN pnpm seed:dev
+
 # Build the Next.js application
 RUN pnpm build
 
@@ -45,16 +55,19 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
+# Copy database from builder stage
+COPY --from=builder /app/data ./data
+
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/src ./src
 
+# Copy and set permissions for entrypoint script
 COPY scripts/docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x docker-entrypoint.sh
 
-# Create data directory for SQLite
-RUN mkdir -p data
+# Set ownership of data directory
 RUN chown -R nextjs:nodejs data
 
 USER nextjs
