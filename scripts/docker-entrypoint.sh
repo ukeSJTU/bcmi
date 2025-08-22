@@ -21,4 +21,5 @@ fi
 
 # 启动应用
 echo "Starting Next.js application..."
-exec node server.js
+# exec node server.js
+exec pnpm start
