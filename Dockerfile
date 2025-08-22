@@ -1,4 +1,3 @@
-# Use Node.js 20 Alpine for smaller image size
 FROM docker.1ms.run/node:18-alpine AS base
 
 # Install dependencies only when needed
@@ -46,9 +45,17 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
+COPY --from=builder /app/scripts ./scripts
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/src ./src
+
+COPY scripts/docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x docker-entrypoint.sh
+
 # Create data directory for SQLite
 RUN mkdir -p data
-RUN chown nextjs:nodejs data
+RUN chown -R nextjs:nodejs data
 
 USER nextjs
 
@@ -57,5 +64,5 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Start the application
-CMD ["node", "server.js"]
+# Use the entrypoint script
+CMD ["./docker-entrypoint.sh"]
