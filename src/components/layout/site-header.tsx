@@ -49,17 +49,26 @@ export async function SiteHeader() {
     <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         <Link href="/" className="flex items-center space-x-3">
+          {/* Desktop logo - horizontal */}
           <Image
-            src="/bcmi.logo.small.png"
-            alt="BCMI Logo"
-            width={60}
+            src="/AGI.logo.horizontal.png"
+            alt="AGI Logo"
+            width={120}
+            height={40}
+            className="hidden md:block h-10 w-auto"
+          />
+          {/* Mobile logo - vertical */}
+          <Image
+            src="/AGI.logo.vertical.png"
+            alt="AGI Logo"
+            width={40}
             height={60}
-            className="h-12 w-auto"
+            className="md:hidden h-12 w-auto"
           />
           <div className="flex flex-col">
-            <span className="text-xl font-bold tracking-tight">BCMI</span>
+            <span className="text-xl font-bold tracking-tight">AGI Lab</span>
             <span className="text-sm text-muted-foreground">
-              Brain-like Computing & Machine Intelligence
+              Artificial General Intelligence
             </span>
           </div>
         </Link>
