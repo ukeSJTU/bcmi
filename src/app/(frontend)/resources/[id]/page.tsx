@@ -1,14 +1,15 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { convertRichTextToHTML, extractTextFromRichText, hasRichTextContent } from "@/lib/richtext-utils"
+import type { Media, Resource } from "@/payload-types"
 import config from "@payload-config"
+import { ArrowLeft, ExternalLink } from "lucide-react"
 import { unstable_cache } from "next/cache"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getPayload } from "payload"
-import type { Resource, Media } from "../../../../payload-types"
-import { ArrowLeft, ExternalLink } from "lucide-react"
 
 interface ResourceWithRelations extends Resource {
   thumbnail?: Media
@@ -88,10 +89,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   return {
     title: `${resource.title} - BCMI Resources`,
-    description: resource.description || `${resource.resourceType} resource from BCMI Lab`,
+    description: resource.summary || extractTextFromRichText(resource.description) || `${resource.resourceType} resource from BCMI Lab`,
     openGraph: {
       title: resource.title,
-      description: resource.description || `${resource.resourceType} resource from BCMI Lab`,
+      description: resource.summary || extractTextFromRichText(resource.description) || `${resource.resourceType} resource from BCMI Lab`,
       images: resource.thumbnail && typeof resource.thumbnail === 'object' && resource.thumbnail.url
         ? [{ url: resource.thumbnail.url }]
         : undefined,
@@ -146,8 +147,11 @@ export default async function ResourceDetailPage({ params }: { params: Promise<{
             
             <h1 className="text-4xl font-bold">{resource.title}</h1>
             
-            {resource.description && typeof resource.description === 'string' && (
-              <p className="text-xl text-muted-foreground">{resource.description}</p>
+            {hasRichTextContent(resource.description) && (
+              <div 
+                className="text-xl text-muted-foreground prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: convertRichTextToHTML(resource.description) }}
+              />
             )}
           </div>
         </div>
@@ -181,6 +185,36 @@ export default async function ResourceDetailPage({ params }: { params: Promise<{
                       </Badge>
                     ))}
                   </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Course syllabus */}
+            {resource.courseInfo?.isCourse && hasRichTextContent(resource.courseInfo.syllabus) && (
+              <Card>
+                <CardHeader>
+                  <h2 className="text-2xl font-semibold">Course Content</h2>
+                </CardHeader>
+                <CardContent>
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: convertRichTextToHTML(resource.courseInfo.syllabus) }}
+                  />
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Publication abstract */}
+            {resource.publicationInfo?.isPublication && hasRichTextContent(resource.publicationInfo.abstract) && (
+              <Card>
+                <CardHeader>
+                  <h2 className="text-2xl font-semibold">Abstract</h2>
+                </CardHeader>
+                <CardContent>
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: convertRichTextToHTML(resource.publicationInfo.abstract) }}
+                  />
                 </CardContent>
               </Card>
             )}

@@ -1,10 +1,12 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { convertRichTextToHTML } from "@/lib/richtext-utils"
 import type { Media, ResearchArea, ResearchDemo } from "@/payload-types"
 import { ExternalLink } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+
 
 // Extend ResearchArea to include populated demos
 interface ResearchAreaWithDemos extends ResearchArea {
@@ -16,6 +18,7 @@ interface ResearchSectionProps {
 }
 
 export function ResearchSection({ researchArea }: ResearchSectionProps) {
+
   return (
     <section 
       id={researchArea.anchor} 
@@ -25,11 +28,10 @@ export function ResearchSection({ researchArea }: ResearchSectionProps) {
         <h2 className="text-2xl font-bold mb-4">
           {researchArea.title}
         </h2>
-        
         {researchArea.description && (
           <div 
             className="text-muted-foreground mb-6 prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: researchArea.description }}
+            dangerouslySetInnerHTML={{ __html: convertRichTextToHTML(researchArea.description) }}
           />
         )}
       </div>

@@ -1,14 +1,15 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { convertRichTextToHTML, extractTextFromRichText } from "@/lib/richtext-utils"
+import type { Media, Member, Position } from "@/payload-types"
 import config from "@payload-config"
+import { ArrowLeft, Building2, Calendar, Globe, Mail, MapPin, Phone, User } from "lucide-react"
 import { unstable_cache } from "next/cache"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getPayload } from "payload"
-import type { Media, Member, Position } from "../../../../payload-types"
-import { ArrowLeft, Building2, Calendar, Globe, Mail, MapPin, Phone, User } from "lucide-react"
 
 interface MemberWithRelations extends Member {
   position: Position
@@ -84,7 +85,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   return {
     title: `${member.name} - BCMI Lab`,
-    description: member.researchInterests || `${member.title || ''} at BCMI Lab`,
+    description: member.researchInterests || extractTextFromRichText(member.bio) || `${member.title || ''} at BCMI Lab`,
   }
 }
 
@@ -243,14 +244,10 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
                 <h2 className="text-xl font-semibold">Biography</h2>
               </CardHeader>
               <CardContent>
-                <div className="prose prose-sm max-w-none">
-                  {/* Rich text content would be rendered here */}
-                  <div className="text-muted-foreground">
-                    {typeof member.bio === 'object' && member.bio.root && (
-                      <p>Biography content available</p>
-                    )}
-                  </div>
-                </div>
+                <div 
+                  className="prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{ __html: convertRichTextToHTML(member.bio) }}
+                />
               </CardContent>
             </Card>
           )}
@@ -261,14 +258,10 @@ export default async function MemberDetailPage({ params }: { params: Promise<{ i
                 <h2 className="text-xl font-semibold">Education</h2>
               </CardHeader>
               <CardContent>
-                <div className="prose prose-sm max-w-none">
-                  {/* Rich text content would be rendered here */}
-                  <div className="text-muted-foreground">
-                    {typeof member.education === 'object' && member.education.root && (
-                      <p>Education information available</p>
-                    )}
-                  </div>
-                </div>
+                <div 
+                  className="prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{ __html: convertRichTextToHTML(member.education) }}
+                />
               </CardContent>
             </Card>
           )}

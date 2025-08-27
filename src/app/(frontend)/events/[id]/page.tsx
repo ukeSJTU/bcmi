@@ -1,15 +1,16 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { convertRichTextToHTML, extractTextFromRichText, hasRichTextContent } from "@/lib/richtext-utils"
+import type { Event, Media } from "@/payload-types"
 import config from "@payload-config"
+import { format } from "date-fns"
+import { ArrowLeft, Calendar, MapPin } from "lucide-react"
 import { unstable_cache } from "next/cache"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { getPayload } from "payload"
-import type { Event, Media } from "../../../../payload-types"
-import { ArrowLeft, Calendar, MapPin } from "lucide-react"
-import { format } from "date-fns"
 
 interface EventWithRelations extends Event {
   featuredImage?: Media
@@ -95,10 +96,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
   return {
     title: `${event.title} - BCMI Lab`,
-    description: event.description || `${event.eventType} at BCMI Lab`,
+    description: event.summary || extractTextFromRichText(event.description) || `${event.eventType} at BCMI Lab`,
     openGraph: {
       title: event.title,
-      description: event.description || `${event.eventType} at BCMI Lab`,
+      description: event.summary || extractTextFromRichText(event.description) || `${event.eventType} at BCMI Lab`,
       images: event.featuredImage && typeof event.featuredImage === 'object' && event.featuredImage.url
         ? [{ url: event.featuredImage.url }]
         : undefined,
@@ -156,8 +157,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             
             <h1 className="text-4xl font-bold">{event.title}</h1>
             
-            {event.description && typeof event.description === 'string' && (
-              <p className="text-xl text-muted-foreground">{event.description}</p>
+            {hasRichTextContent(event.description) && (
+              <div 
+                className="text-xl text-muted-foreground prose max-w-none"
+                dangerouslySetInnerHTML={{ __html: convertRichTextToHTML(event.description) }}
+              />
             )}
           </div>
         </div>
@@ -210,6 +214,20 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                       </div>
                     ))}
                   </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {hasRichTextContent(event.outcomes) && (
+              <Card>
+                <CardHeader>
+                  <h2 className="text-2xl font-semibold">Event Outcomes</h2>
+                </CardHeader>
+                <CardContent>
+                  <div 
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: convertRichTextToHTML(event.outcomes) }}
+                  />
                 </CardContent>
               </Card>
             )}

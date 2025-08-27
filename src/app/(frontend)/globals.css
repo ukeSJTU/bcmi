@@ -123,3 +123,102 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Rich text content styling */
+@layer base {
+  .prose ol {
+    @apply list-decimal list-inside space-y-2;
+  }
+  
+  .prose ol li {
+    @apply pl-2;
+  }
+  
+  .prose ul {
+    @apply list-disc list-inside space-y-1;
+  }
+  
+  .prose ul li {
+    @apply pl-2;
+  }
+  
+  .prose ol ol,
+  .prose ul ul,
+  .prose ol ul,
+  .prose ul ol {
+    @apply ml-4 mt-1;
+  }
+  
+  .prose h1 {
+    @apply text-3xl font-bold mb-4 mt-8;
+  }
+  
+  .prose h2 {
+    @apply text-2xl font-semibold mb-3 mt-6;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-semibold mb-2 mt-4;
+  }
+  
+  .prose h4 {
+    @apply text-lg font-semibold mb-2 mt-4;
+  }
+  
+  .prose p {
+    @apply mb-4 leading-relaxed;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-muted pl-4 italic text-muted-foreground my-4;
+  }
+  
+  .prose code {
+    @apply bg-muted px-2 py-1 rounded text-sm font-mono;
+  }
+  
+  .prose pre {
+    @apply bg-muted p-4 rounded overflow-x-auto my-4;
+  }
+  
+  .prose pre code {
+    @apply bg-transparent p-0;
+  }
+  
+  .prose a {
+    @apply text-primary underline hover:text-primary/80;
+  }
+  
+  .prose strong {
+    @apply font-semibold;
+  }
+  
+  .prose em {
+    @apply italic;
+  }
+  
+  .prose hr {
+    @apply border-border my-6;
+  }
+  
+  .prose table {
+    @apply w-full border-collapse border border-border my-4;
+  }
+  
+  .prose th {
+    @apply border border-border bg-muted px-4 py-2 font-semibold text-left;
+  }
+  
+  .prose td {
+    @apply border border-border px-4 py-2;
+  }
+  
+  /* Fix for numbered lists specifically */
+  .prose .list-number {
+    @apply list-decimal list-inside;
+  }
+  
+  .prose .list-number li {
+    @apply pl-2 mb-1;
+  }
+}
