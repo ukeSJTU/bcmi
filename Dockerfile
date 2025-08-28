@@ -68,6 +68,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 # Create cache directory with correct ownership
 RUN mkdir -p .next/cache && chown nextjs:nodejs .next/cache
 
+RUN mkdir -p media && chown -R nextjs:nodejs media
+
 # Set ownership for directories
 # RUN mkdir -p .next/cache
 # RUN chown -R nextjs:nodejs .next

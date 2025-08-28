@@ -15,7 +15,7 @@ services:
       # Persist SQLite database
       - bcmi-data:/app/data
       # Persist uploaded media
-      - bcmi-media:/app/public/media
+      - bcmi-media:/app/media
     restart: unless-stopped
 
 volumes:
