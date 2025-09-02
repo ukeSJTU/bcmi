@@ -5,7 +5,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { Events, Media, Members, Positions, ResearchAreas, ResearchDemos, Resources } from './collections'
-import { Nav } from './globals'
+import { Homepage, Nav } from './globals'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -16,7 +16,7 @@ export default buildConfig({
 
   // Define and configure your collections in this array
   collections: [Events, Media, Members, Positions, ResearchAreas, ResearchDemos, Resources],
-  globals: [Nav],
+  globals: [Homepage, Nav],
 
   // Your Payload secret - should be a complex and secure string, unguessable
   secret: process.env.PAYLOAD_SECRET || '',

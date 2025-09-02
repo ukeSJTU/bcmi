@@ -97,9 +97,11 @@ export interface Config {
     defaultIDType: number;
   };
   globals: {
+    homepage: Homepage;
     nav: Nav;
   };
   globalsSelect: {
+    homepage: HomepageSelect<false> | HomepageSelect<true>;
     nav: NavSelect<false> | NavSelect<true>;
   };
   locale: null;
@@ -1133,6 +1135,35 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage".
+ */
+export interface Homepage {
+  id: number;
+  /**
+   * Main headline for the fallback hero section
+   */
+  heroTitle?: string | null;
+  /**
+   * Subtitle text for the fallback hero section
+   */
+  heroSubtitle?: string | null;
+  /**
+   * Main description of the BCMI laboratory (plain text)
+   */
+  aboutContent?: string | null;
+  /**
+   * Laboratory contact phone number
+   */
+  contactPhone?: string | null;
+  /**
+   * Laboratory physical address
+   */
+  contactAddress?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "nav".
  */
 export interface Nav {
@@ -1145,6 +1176,20 @@ export interface Nav {
   }[];
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homepage_select".
+ */
+export interface HomepageSelect<T extends boolean = true> {
+  heroTitle?: T;
+  heroSubtitle?: T;
+  aboutContent?: T;
+  contactPhone?: T;
+  contactAddress?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

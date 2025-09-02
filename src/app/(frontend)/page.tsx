@@ -3,7 +3,7 @@ import { ResearchCarousel } from "@/components/homepage";
 import config from "@payload-config";
 import { unstable_cache } from "next/cache";
 import { getPayload } from "payload";
-import type { ResearchDemo, ResearchArea, Media } from "../../payload-types";
+import type { ResearchDemo, ResearchArea, Media, Homepage } from "../../payload-types";
 
 interface FeaturedResearchDemo extends ResearchDemo {
   researchArea: ResearchArea
@@ -53,8 +53,36 @@ const getFeaturedResearch = unstable_cache(
   }
 )
 
+const getHomepageContent = unstable_cache(
+  async (): Promise<Homepage | null> => {
+    try {
+      const payload = await getPayload({ config })
+      const result = await payload.findGlobal({
+        slug: 'homepage',
+      })
+      return result as Homepage
+    } catch (error) {
+      console.error('Error fetching homepage content:', error)
+      return null
+    }
+  },
+  ['homepage-content'],
+  {
+    tags: ['homepage'],
+    revalidate: 3600, // 1 hour
+  }
+)
+
 export default async function Home() {
   const featuredResearch = await getFeaturedResearch()
+  const homepageContent = await getHomepageContent()
+  
+  // Fallback values (current hardcoded content)
+  const heroTitle = homepageContent?.heroTitle || 'Welcome to the BCMI Laboratory!'
+  const heroSubtitle = homepageContent?.heroSubtitle || 'Center for Brain-like Computing and Machine Intelligence'
+  const aboutText = homepageContent?.aboutContent || 'Center for Brain-like Computing and Machine Intelligence is founded by Prof. Bao-Liang Lu and Prof. Liqing Zhang. The long term mission of the center is to understand the mechanism of intelligent information processing and cognitive process in the brain and to develop new type computing structures and algorithms for information technology.\n\nTo this end, by means of advanced EEG equipment and system modeling technology, we are to develop new type models for neural information presentation, feature analysis and pattern recognition. Current research interests include Brain Computer Interface, Computer Vision, Speech Signal Processing, Natural Language Processing, Bioinformatics, Machine Learning and Cognitive Computing.'
+  const contactPhone = homepageContent?.contactPhone || '+86(21)34204421'
+  const contactAddress = homepageContent?.contactAddress || '3-East 307 SEIEE Building, No. 800 Dongchuan Road, Minhang District, Shanghai, 200240'
   return (
     <MainLayout>
       <div className="space-y-8">
@@ -64,36 +92,26 @@ export default async function Home() {
         ) : (
           /* Fallback Hero Section */
           <section className="text-center py-12 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
-            <h1 className="text-4xl font-bold mb-4">Welcome to the BCMI Laboratory!</h1>
+            <h1 className="text-4xl font-bold mb-4">{heroTitle}</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Center for Brain-like Computing and Machine Intelligence
+              {heroSubtitle}
             </p>
           </section>
         )}
         
         {/* About Section */}
         <section className="prose prose-lg max-w-none">
-          <p>
-            Center for Brain-like Computing and Machine Intelligence is founded by Prof. Bao-Liang Lu and 
-            Prof. Liqing Zhang. The long term mission of the center is to understand the mechanism of 
-            intelligent information processing and cognitive process in the brain and to develop new type 
-            computing structures and algorithms for information technology.
-          </p>
-          <p>
-            To this end, by means of advanced EEG equipment and system modeling technology, we are to 
-            develop new type models for neural information presentation, feature analysis and pattern 
-            recognition. Current research interests include Brain Computer Interface, Computer Vision, 
-            Speech Signal Processing, Natural Language Processing, Bioinformatics, Machine Learning and 
-            Cognitive Computing.
-          </p>
+          {aboutText.split('\n\n').map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
         </section>
         
         {/* Contact Information */}
         <section className="bg-muted/50 p-6 rounded-lg">
           <h2 className="text-2xl font-semibold mb-4">Contact Information</h2>
           <div className="space-y-2">
-            <p><strong>Telephone:</strong> +86(21)34204421</p>
-            <p><strong>Address:</strong> 3-East 307 SEIEE Building, No. 800 Dongchuan Road, Minhang District, Shanghai, 200240</p>
+            <p><strong>Telephone:</strong> {contactPhone}</p>
+            <p><strong>Address:</strong> {contactAddress}</p>
           </div>
         </section>
       </div>
